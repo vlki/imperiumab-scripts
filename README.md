@@ -23,9 +23,9 @@ WIKI_PASSWORD=password
 
 To be able to run this script, you need to first download data from CEDR, SZIF and EU funds registers via [kokes/od](https://github.com/kokes/od) project done by Ondřej Kokeš. Follow their instructions and download cedr, eufondy and szif datasets to your local PostgreSQL database.
 
-When download, you can run the script which then searches those datasets for subsidies of Czech companies in Imperium AB database. When found, those subsidies are then imported to the Imperium AB database.
+When downloaded, you can then run the script which searches those datasets for subsidies of Czech companies in Imperium AB database. When found, those subsidies are then imported to the Imperium AB database.
 
-To run the script, you only need to pass the database connection string of `kokes/od` database. Eg.:
+To run the script, you only need to pass the database connection string of your local PostgreSQL database with `kokes/od` datasets. Eg.:
 
 ```
 python3 import_czech_subsidies.py --connstring postgresql://localhost/od
