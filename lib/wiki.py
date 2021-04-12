@@ -7,6 +7,9 @@ class Wiki:
         self.site = mwclient.Site('imperiumab.investigace.cz', path='/')
         self.site.login(username, password)
 
+    def upload_file(self, file, file_name, file_description):
+        self.site.upload(file, filename=file_name, description=file_description)
+
 def parse_wiki_date(wiki_date):
     datetime_obj = datetime.strptime(wiki_date, '1/%Y/%m/%d')
 
