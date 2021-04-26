@@ -10,7 +10,7 @@ from os.path import join, dirname
 from pprint import pprint
 import tempfile
 
-from lib import subsidy_csv, subsidy_export_excel, subsidy_wiki, wiki
+from imperiumab import subsidy_csv, subsidy_export_excel, subsidy_wiki, wiki
 
 excel_file_configs = [
     {
@@ -45,7 +45,8 @@ excel_file_configs = [
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Upload subsidies as Excel files to Imperium AB wiki')
-    parser.add_argument('--subsidies-csv', required=True, help='Path to the CSV file with current subsidies exported from wiki')
+    parser.add_argument('--subsidies-csv', required=True,
+                        help='Path to the CSV file with current subsidies exported from wiki')
     args = parser.parse_args()
 
     dotenv_path = join(dirname(__file__), '.env')
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
     with open(args.subsidies_csv, mode='r') as subsidies_csv_file:
         reader = csv.DictReader(subsidies_csv_file)
-        
+
         for row in reader:
             subsidies.append(subsidy_csv.parse_row(row))
 
@@ -96,5 +97,3 @@ if __name__ == "__main__":
             wiki_obj.upload_file(tmp, excel_file_config['file_name'], 'Upload subsidies export Excel files')
 
         print('Uploaded {file_name} to Imperium AB wiki'.format(file_name=excel_file_config['file_name']))
-    
-

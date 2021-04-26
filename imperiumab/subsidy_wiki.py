@@ -1,26 +1,44 @@
 import json
 from pprint import pprint
+import urllib.parse
 
-from lib.subsidy import Subsidy
-from lib.wiki import parse_wiki_date, format_wiki_str
+from imperiumab.subsidy import Subsidy
+from imperiumab.wiki import parse_wiki_date, format_wiki_str
+
 
 def get_subsidy_page_names(wiki):
     subsidy_category = wiki.site.categories['Dotace']
 
     list(map(lambda p: p.name, subsidy_category.members()))
-    
+
+
 def get_subsidies(wiki):
     subsidy_category = wiki.site.categories['Dotace']
 
     return map(lambda subsidy_page: map_subsidy_page_to_subsidy(wiki, subsidy_page), subsidy_category.members())
 
+
+def get_subsidies_for_company(wiki, company_name):
+    query = "[[Category:Dotace]][[Has beneficiary::{company_name}]]|limit=2000".format(company_name=company_name)
+
+    subsidies = []
+
+    for answer in wiki.site.ask(query):
+        for property_name, property_data in answer.items():
+            if property_name == 'fulltext':
+                subsidies.append(map_subsidy_page_to_subsidy(wiki, wiki.site.pages[property_data]))
+
+    return subsidies
+
+
 def map_subsidy_page_to_subsidy(wiki, subsidy_page):
     subsidy = Subsidy()
     subsidy.id = subsidy_page.name
 
-    print(subsidy.id)
+    # print(subsidy.id)
 
-    subsidy_structured_data = wiki.site.raw_api(action='smwbrowse', browse='subject', params=json.dumps({'subject': subsidy_page.name, 'ns': 0, 'iw': '', 'subobject': ''}))
+    subsidy_structured_data = wiki.site.raw_api(action='smwbrowse', browse='subject', params=json.dumps(
+        {'subject': subsidy_page.name, 'ns': 0, 'iw': '', 'subobject': ''}))
     # pprint(subsidy_structured_data)
     for structured_data_item in subsidy_structured_data['query']['data']:
         property_name = structured_data_item['property']
@@ -29,7 +47,8 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
         if property_name == 'Has_beneficiary':
             beneficiary_encoded_page_name = property_data[0]['item']
 
-            beneficiary_structured_data = wiki.site.raw_api(action='smwbrowse', browse='subject', params=json.dumps({'subject': beneficiary_encoded_page_name, 'ns': 0, 'iw': '', 'subobject': ''}))
+            beneficiary_structured_data = wiki.site.raw_api(action='smwbrowse', browse='subject', params=json.dumps(
+                {'subject': beneficiary_encoded_page_name, 'ns': 0, 'iw': '', 'subobject': ''}))
             for beneficiary_structured_data_item in beneficiary_structured_data['query']['data']:
                 if beneficiary_structured_data_item['property'] == '_SKEY':
                     subsidy.beneficiary = beneficiary_structured_data_item['dataitem'][0]['item']
@@ -39,7 +58,7 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
 
         if property_name == 'Has_country_code':
             subsidy.country_code = property_data[0]['item']
-    
+
         if property_name == 'Has_project_code':
             subsidy.project_code = property_data[0]['item']
 
@@ -48,7 +67,7 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
 
         if property_name == 'Has_programme_code':
             subsidy.programme_code = property_data[0]['item']
-        
+
         if property_name == 'Has_programme_name':
             subsidy.programme_name = property_data[0]['item']
 
@@ -67,7 +86,6 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
         if property_name == 'Has_EU_cofinancing_from_period':
             subsidy.eu_cofinancing_from_period = property_data[0]['item']
 
-
         if property_name == 'Has_original_currency':
             subsidy.original_currency = property_data[0]['item']
 
@@ -77,7 +95,6 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
         if property_name == 'Has_EU_cofinancing_amount_in_original_currency':
             subsidy.eu_cofinancing_amount_in_original_currency = property_data[0]['item']
 
-
         if property_name == 'Has_currency_exchange_to_EUR':
             subsidy.currency_exchange_to_eur = property_data[0]['item']
 
@@ -86,7 +103,6 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
 
         if property_name == 'Has_EU_cofinancing_amount_in_EUR':
             subsidy.eu_cofinancing_amount_in_eur = property_data[0]['item']
-
 
         if property_name == 'Has_currency_exchange_to_CZK':
             subsidy.currency_exchange_to_czk = property_data[0]['item']
@@ -102,6 +118,7 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
     # exit(1)
 
     return subsidy
+
 
 page_template = """
 {{| class="wikitable"
@@ -176,6 +193,7 @@ page_template = """
 [[Category:Dotace]]
 """
 
+
 def build_subsidy_page(subsidy):
     subsidy_obj = vars(subsidy)
 
@@ -185,10 +203,12 @@ def build_subsidy_page(subsidy):
 
     return page_template.format(subsidy=subsidy_obj)
 
+
 def exists_subsidy_page(wiki, subsidy):
     page = wiki.site.pages[subsidy.id]
 
     return page.exists
+
 
 def create_subsidy_page(wiki, subsidy, change_text):
     page = wiki.site.pages[subsidy.id]

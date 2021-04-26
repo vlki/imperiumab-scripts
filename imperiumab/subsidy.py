@@ -10,11 +10,11 @@ class Subsidy:
         self.programme_name = None
         self.signed_on = None
         self.year = None
-        
-        self.original_currency = None        
+
+        self.original_currency = None
         self.amount_in_original_currency = None
         self.eu_cofinancing_amount_in_original_currency = None
-        
+
         self.currency_exchange_to_eur = None
         self.amount_in_eur = None
         self.eu_cofinancing_amount_in_eur = None

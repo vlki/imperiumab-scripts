@@ -1,3 +1,4 @@
+autopep8==1.5.6
 mwclient==0.10.1
 openpyxl==3.0.7
 psycopg2-binary==2.8.6

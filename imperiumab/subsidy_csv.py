@@ -1,5 +1,6 @@
-from lib.subsidy import Subsidy
-from lib.csv import format_date, parse_date, parse_str, parse_int, parse_float
+from imperiumab.subsidy import Subsidy
+from imperiumab.csv import format_date, parse_date, parse_str, parse_int, parse_float
+
 
 def get_fieldnames():
     return [
@@ -21,16 +22,17 @@ def get_fieldnames():
         'currency_exchange_to_eur',
         'amount_in_eur',
         'eu_cofinancing_amount_in_eur',
-        
+
         'currency_exchange_to_czk',
         'amount_in_czk',
         'eu_cofinancing_amount_in_czk',
 
         'eu_cofinancing_from_fund',
         'eu_cofinancing_from_period',
-        
+
         'source'
     ]
+
 
 def map_to_row(subsidy):
     return {
@@ -41,7 +43,7 @@ def map_to_row(subsidy):
         'project_code': subsidy.project_code,
         'project_name': subsidy.project_name,
         'programme_code': subsidy.programme_code,
-        'programme_name': subsidy.programme_name,    
+        'programme_name': subsidy.programme_name,
         'signed_on': format_date(subsidy.signed_on),
         'year': subsidy.year,
 
@@ -59,13 +61,14 @@ def map_to_row(subsidy):
 
         'eu_cofinancing_from_fund': subsidy.eu_cofinancing_from_fund,
         'eu_cofinancing_from_period': subsidy.eu_cofinancing_from_period,
-        
+
         'source': subsidy.source,
     }
 
+
 def parse_row(row):
     subsidy = Subsidy()
-    
+
     subsidy.id = parse_str(row['id'])
     subsidy.beneficiary = parse_str(row['beneficiary'])
     subsidy.beneficiary_original_name = parse_str(row['beneficiary_original_name'])
@@ -91,7 +94,7 @@ def parse_row(row):
 
     subsidy.eu_cofinancing_from_fund = parse_str(row['eu_cofinancing_from_fund'])
     subsidy.eu_cofinancing_from_period = parse_str(row['eu_cofinancing_from_period'])
-    
+
     subsidy.source = parse_str(row['source'])
 
     return subsidy

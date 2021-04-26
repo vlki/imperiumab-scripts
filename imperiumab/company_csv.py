@@ -1,5 +1,6 @@
-from lib.company import Company
-from lib.csv import format_date, parse_date, parse_str
+from imperiumab.company import Company
+from imperiumab.csv import format_date, parse_date, parse_str
+
 
 def get_fieldnames():
     return [
@@ -13,6 +14,7 @@ def get_fieldnames():
         'officials',
         'media_mentions'
     ]
+
 
 def map_to_row(company):
     return {
@@ -28,16 +30,17 @@ def map_to_row(company):
         'media_mentions': None
     }
 
+
 def parse_row(row):
     company = Company()
-    
+
     company.name = parse_str(row['name'])
     company.country_code = parse_str(row['country_code'])
     company.identifier = parse_str(row['identifier'])
     company.address = parse_str(row['address'])
     company.exists_since = parse_date(row['exists_since'])
     company.exists_until = parse_date(row['exists_until'])
-    
+
     # TODO
     company.owners = None
     company.officials = None

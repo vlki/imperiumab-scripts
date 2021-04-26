@@ -13,7 +13,7 @@ def get_eur_to_czk_rate(year):
         '2010': 26.284,
         '2009': 26.435,
         '2008': 24.946,
-        
+
         '2007': 26.829,
         '2006': 28.045,
         '2005': 29.298,
@@ -27,12 +27,15 @@ def get_eur_to_czk_rate(year):
 
     return rates[str(year)]
 
+
 def get_eur_to_czk_rate_text(year):
     eur_rate = get_eur_to_czk_rate(year)
 
     if year >= 2008:
-        text = "Dle kurzu CZK/EUR {eur_rate:.3f} z roku {year}. Zdroj: Směnné kurzy dle jednotlivých let zveřejněné na serveru Eurostat. Dostupné z: https://ec.europa.eu/eurostat/web/exchange-and-interest-rates/data/database".format(eur_rate=eur_rate, year=year)
+        text = "Dle kurzu CZK/EUR {eur_rate:.3f} z roku {year}. Zdroj: Směnné kurzy dle jednotlivých let zveřejněné na serveru Eurostat. Dostupné z: https://ec.europa.eu/eurostat/web/exchange-and-interest-rates/data/database".format(
+            eur_rate=eur_rate, year=year)
     else:
-        text = "Dle kurzu CZK/EUR {eur_rate:.3f} z roku {year}. Zdroj: Devízové kurzy vedené Českou národní bankou. Dostupné z: https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/prumerne_form.html".format(eur_rate=eur_rate, year=year)
-    
+        text = "Dle kurzu CZK/EUR {eur_rate:.3f} z roku {year}. Zdroj: Devízové kurzy vedené Českou národní bankou. Dostupné z: https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/prumerne_form.html".format(
+            eur_rate=eur_rate, year=year)
+
     return text

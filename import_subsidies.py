@@ -8,13 +8,15 @@ from os.path import join, dirname
 from pprint import pprint
 from prompt_toolkit.shortcuts import confirm
 
-from lib.wiki import Wiki
-from lib import company_csv, subsidy_csv, subsidy_wiki
+from imperiumab.wiki import Wiki
+from imperiumab import company_csv, subsidy_csv, subsidy_wiki
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Import subsidies from CSV file to Imperium AB wiki')
-    parser.add_argument('--companies-csv', required=True, help='Path to the CSV file with current companies exported from wiki')
-    parser.add_argument('--subsidies-csv', required=True, help='Path to the CSV file with current subsidies exported from wiki')
+    parser.add_argument('--companies-csv', required=True,
+                        help='Path to the CSV file with current companies exported from wiki')
+    parser.add_argument('--subsidies-csv', required=True,
+                        help='Path to the CSV file with current subsidies exported from wiki')
     parser.add_argument('--import-csv', required=True, help='Path to the CSV file with subsidies to import')
     args = parser.parse_args()
 
@@ -34,7 +36,7 @@ if __name__ == "__main__":
 
     with open(args.companies_csv, mode='r') as companies_csv_file:
         reader = csv.DictReader(companies_csv_file)
-        
+
         for row in reader:
             companies.append(company_csv.parse_row(row))
 
@@ -46,7 +48,7 @@ if __name__ == "__main__":
 
     with open(args.subsidies_csv, mode='r') as subsidies_csv_file:
         reader = csv.DictReader(subsidies_csv_file)
-        
+
         for row in reader:
             existing_subsidies.append(subsidy_csv.parse_row(row))
 
@@ -58,11 +60,12 @@ if __name__ == "__main__":
 
     with open(args.import_csv, mode='r') as import_csv_file:
         reader = csv.DictReader(import_csv_file)
-        
+
         for row in reader:
             import_subsidies.append(subsidy_csv.parse_row(row))
 
-    print('Loaded {import_subsidies_count} subsidies to be imported from passed CSV'.format(import_subsidies_count=len(import_subsidies)))
+    print('Loaded {import_subsidies_count} subsidies to be imported from passed CSV'.format(
+        import_subsidies_count=len(import_subsidies)))
 
     # Identify and remove duplicates
 
@@ -92,7 +95,8 @@ if __name__ == "__main__":
         company = companies_by_name[beneficiary]
 
         if company is None:
-            print('Skipping import of {company_import_subsidies_count} subsidies, because company with name {beneficiary} does not exist in wiki'.format(company_import_subsidies_count=len(company_import_subsidies), beneficiary=beneficiary))
+            print('Skipping import of {company_import_subsidies_count} subsidies, because company with name {beneficiary} does not exist in wiki'.format(
+                company_import_subsidies_count=len(company_import_subsidies), beneficiary=beneficiary))
             continue
 
         company_existing_subsidies = []
@@ -105,16 +109,18 @@ if __name__ == "__main__":
 
             for existing_subsidy in company_existing_subsidies:
                 if import_subsidy.year == existing_subsidy.year and import_subsidy.amount_in_czk == existing_subsidy.amount_in_czk:
-                    print('- Wont be importing {import_subsidy}, because it seems to be already on wiki as {existing_subsidy}'.format(import_subsidy=import_subsidy, existing_subsidy=existing_subsidy))
+                    print('- Wont be importing {import_subsidy}, because it seems to be already on wiki as {existing_subsidy}'.format(
+                        import_subsidy=import_subsidy, existing_subsidy=existing_subsidy))
                     will_import = False
-            
+
             if will_import:
                 filtered_company_import_subsidies[company.name].append(import_subsidy)
 
         # print('==============================================')
         # print('==============================================')
         # print('==============================================')
-        print('{company.name}: will be importing {import_subsidies_count} subsidies'.format(company=company, import_subsidies_count=len(filtered_company_import_subsidies)))
+        print('{company.name}: will be importing {import_subsidies_count} subsidies'.format(
+            company=company, import_subsidies_count=len(filtered_company_import_subsidies)))
         # print('==============================================')
         # for subsidy in company_existing_subsidies:
         #     print(subsidy)
@@ -142,7 +148,8 @@ if __name__ == "__main__":
     for beneficiary in filtered_company_import_subsidies.keys():
         import_subsidies = filtered_company_import_subsidies[beneficiary]
 
-        print('Importing {import_subsidies_count} subsidies for {beneficiary}...'.format(import_subsidies_count=len(import_subsidies), beneficiary=beneficiary))
+        print('Importing {import_subsidies_count} subsidies for {beneficiary}...'.format(
+            import_subsidies_count=len(import_subsidies), beneficiary=beneficiary))
 
         for import_subsidy in import_subsidies:
             if subsidy_wiki.exists_subsidy_page(wiki, import_subsidy):
@@ -156,6 +163,3 @@ if __name__ == "__main__":
 
             # print(subsidy_wiki.build_subsidy_page(import_subsidy))
             # exit(1)
-
-
-

@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 import os
 from os.path import join, dirname
 
-from lib.wiki import Wiki
-from lib import subsidy_csv, subsidy_wiki
+from imperiumab.wiki import Wiki
+from imperiumab import subsidy_csv, subsidy_wiki
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Export list of subsidies from Imperium AB wiki to CSV file data/subsidies_export.csv')
+    parser = argparse.ArgumentParser(
+        description='Export list of subsidies from Imperium AB wiki to CSV file data/subsidies_export.csv')
     args = parser.parse_args()
 
     dotenv_path = join(dirname(__file__), '.env')
@@ -42,7 +43,7 @@ if __name__ == "__main__":
         writer = csv.DictWriter(csv_file, fieldnames=subsidy_csv.get_fieldnames())
 
         writer.writeheader()
-        
+
         for subsidy in subsidies:
             writer.writerow(subsidy_csv.map_to_row(subsidy))
 
