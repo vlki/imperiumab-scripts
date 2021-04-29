@@ -1,5 +1,9 @@
+import decimal
+
+
 def get_eur_to_czk_rate(year):
     rates = {
+        '2021': 26.070, # Eurostat 2021Q1
         '2020': 26.455,
         '2019': 25.670,
         '2018': 25.647,
@@ -39,3 +43,36 @@ def get_eur_to_czk_rate_text(year):
             eur_rate=eur_rate, year=year)
 
     return text
+
+
+def fill_subsidy_eur_info(subsidy):
+    if subsidy.amount_in_czk is None:
+        return subsidy
+
+    if subsidy.amount_in_czk == 0:
+        subsidy.amount_in_eur = 0
+
+        if subsidy.eu_cofinancing_amount_in_czk is not None:
+            subsidy.eu_cofinancing_amount_in_eur = 0
+
+        return subsidy
+
+    year = subsidy.year
+    if year == '2007-2013':
+        year = 2017
+
+    # Euro started on Jan 1st, 1999
+    if year < 1999:
+        return subsidy
+
+    eur_rate = get_eur_to_czk_rate(year)
+    eur_rate_text = get_eur_to_czk_rate_text(year)
+
+    subsidy.amount_in_eur = round(subsidy.amount_in_czk / decimal.Decimal(eur_rate))
+    subsidy.currency_exchange_to_eur = eur_rate_text
+
+    if subsidy.eu_cofinancing_amount_in_czk is not None:
+        subsidy.eu_cofinancing_amount_in_eur = round(
+            subsidy.eu_cofinancing_amount_in_czk / decimal.Decimal(eur_rate))
+
+    return subsidy

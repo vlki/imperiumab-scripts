@@ -124,13 +124,18 @@ if __name__ == "__main__":
             'Exists since',
             'Exists until',
             'Wiki URL',
-            'Subsidies count'
+            'Subsidies count',
+            'Subsidies sum CZK',
         ]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
         writer.writeheader()
 
         for company in companies:
+            subsidies_sum_czk = 0
+            for subsidy in company_subsidies[company.name]:
+                subsidies_sum_czk += subsidy.amount_in_czk
+
             mapped_row = company_csv.map_to_row(company)
             row = {
                 'Name': mapped_row['name'],
@@ -140,7 +145,8 @@ if __name__ == "__main__":
                 'Exists since': mapped_row['exists_since'],
                 'Exists until': mapped_row['exists_until'],
                 'Wiki URL': company_page_urls[company.name],
-                'Subsidies count': len(company_subsidies[company.name])
+                'Subsidies count': len(company_subsidies[company.name]),
+                'Subsidies sum CZK': round(subsidies_sum_czk, 2)
             }
             writer.writerow(row)
 

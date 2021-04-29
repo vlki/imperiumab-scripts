@@ -94,6 +94,6 @@ if __name__ == "__main__":
         with tempfile.NamedTemporaryFile() as tmp:
             wb.save(tmp.name)
             tmp.seek(0)
-            wiki_obj.upload_file(tmp, excel_file_config['file_name'], 'Upload subsidies export Excel files')
+            wiki_obj.upload_file(tmp, excel_file_config['file_name'], 'Upload Excelu s dotacemi k exportu')
 
         print('Uploaded {file_name} to Imperium AB wiki'.format(file_name=excel_file_config['file_name']))

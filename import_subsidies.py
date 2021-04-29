@@ -90,7 +90,7 @@ if __name__ == "__main__":
     filtered_company_import_subsidies = {}
 
     for beneficiary in import_subsidies_by_beneficiary.keys():
-        company_import_subsidies = sorted(import_subsidies_by_beneficiary[beneficiary], key=lambda s: s.year)
+        company_import_subsidies = sorted(import_subsidies_by_beneficiary[beneficiary], key=lambda s: str(s.year))
 
         company = companies_by_name[beneficiary]
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
         company_existing_subsidies = []
         if company.name in existing_subsidies_by_beneficiary:
-            company_existing_subsidies = sorted(existing_subsidies_by_beneficiary[company.name], key=lambda s: s.year)
+            company_existing_subsidies = sorted(existing_subsidies_by_beneficiary[company.name], key=lambda s: str(s.year))
 
         filtered_company_import_subsidies[company.name] = []
         for import_subsidy in company_import_subsidies:

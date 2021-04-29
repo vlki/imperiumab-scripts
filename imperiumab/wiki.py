@@ -11,7 +11,9 @@ class Wiki:
         self.base_url = 'https://imperiumab.investigace.cz/wiki/'
 
     def upload_file(self, file, file_name, file_description):
-        self.site.upload(file, filename=file_name, description=file_description)
+        # ignore=True needed, because otherwise the upload will silently fail on any warning
+        # from MediaWiki like that file already exists
+        self.site.upload(file, filename=file_name, description=file_description, ignore=True)
 
 
 def parse_wiki_date(wiki_date):

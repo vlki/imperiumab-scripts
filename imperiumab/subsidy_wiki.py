@@ -35,7 +35,7 @@ def map_subsidy_page_to_subsidy(wiki, subsidy_page):
     subsidy = Subsidy()
     subsidy.id = subsidy_page.name
 
-    # print(subsidy.id)
+    print(subsidy.id)
 
     subsidy_structured_data = wiki.site.raw_api(action='smwbrowse', browse='subject', params=json.dumps(
         {'subject': subsidy_page.name, 'ns': 0, 'iw': '', 'subobject': ''}))
